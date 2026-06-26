@@ -1,0 +1,2 @@
+-- Taskra foundation migration.
+-- Later slices will add sessions, messages, runs, stages, and tool_calls.

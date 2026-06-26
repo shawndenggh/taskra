@@ -84,3 +84,80 @@ clarify -> specify -> test -> implement -> verify -> document
 ```
 
 Skipping steps is allowed only when the change is truly tiny. "I am impatient" is not a reason.
+
+## MVP Development Setup
+
+Install dependencies:
+
+```bash
+npm install
+```
+
+Run the CLI during development:
+
+```bash
+npm run taskra -- config show
+```
+
+Build the distributable CLI:
+
+```bash
+npm run build
+```
+
+The package exposes a `taskra` binary from `dist/cli.js` after build. During local
+development, use `npm run taskra -- ...` so TypeScript source runs through `tsx`.
+
+## Configuration
+
+Taskra stores non-secret local config in `.taskra/config.json` by default. Set
+`TASKRA_HOME` to override that directory for tests or isolated local runs.
+
+Default model config:
+
+```text
+deepseek/deepseek-chat
+```
+
+Set the default model:
+
+```bash
+npm run taskra -- config set-model deepseek deepseek-chat
+npm run taskra -- config set-model openai gpt-4.1-mini
+```
+
+Show the effective config:
+
+```bash
+npm run taskra -- config show
+```
+
+API keys are read from environment variables and are never written to
+`.taskra/config.json`:
+
+```bash
+export DEEPSEEK_API_KEY=...
+export OPENAI_API_KEY=...
+```
+
+## Postgres
+
+Set `DATABASE_URL` before running migrations:
+
+```bash
+export DATABASE_URL=postgres://postgres:postgres@localhost:5432/taskra
+npm run db:migrate
+```
+
+The migration runner creates and uses a `taskra_migrations` table, then applies
+SQL files from `migrations/` in filename order.
+
+## Verification
+
+Run the checks used by the MVP foundation:
+
+```bash
+npm test
+npm run typecheck
+npm run build
+```
